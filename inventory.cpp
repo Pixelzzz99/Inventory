@@ -3,7 +3,7 @@
 #include <QDragMoveEvent>
 #include <QDragEnterEvent>
 #include <QMimeData>
-#include <QLabel>
+
 
 Inventory::Inventory(QTableWidget* parent) : QTableWidget(parent)
 {
@@ -13,12 +13,17 @@ Inventory::Inventory(QTableWidget* parent) : QTableWidget(parent)
 
 void Inventory::configureRowsAndColumnsToResizeTable()
 {
-    setColumnCount(3);
-    setRowCount(3);
+    putColumnAndRowsCount(mColumn, mRow);
     configureHeaders();
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->resize(302, 302);
+}
+
+void Inventory::putColumnAndRowsCount(int columnCount, int rowsCount)
+{
+    setColumnCount(columnCount);
+    setRowCount(rowsCount);
 }
 
 void Inventory::configureHeaders()
@@ -83,13 +88,10 @@ void Inventory::dropEvent(QDropEvent *event)
         QPixmap pixmap;
         QPoint offset;
         dataStream >> pixmap >> offset;
+        QPoint dropPoint = event->position().toPoint();
 
-        QLabel *newIcon = new QLabel(this);
-        newIcon->setPixmap(pixmap.scaled(100, 100));
-
-        newIcon->move(event->position().toPoint() - offset);
+        QLabel *newIcon = createNewItemAndMoveOnPoint(pixmap, dropPoint, offset);
         newIcon->show();
-        newIcon->setAttribute(Qt::WA_DeleteOnClose);
 
         if (event->source() == this) {
             event->setDropAction(Qt::MoveAction);
@@ -100,4 +102,13 @@ void Inventory::dropEvent(QDropEvent *event)
     } else {
         event->ignore();
     }
+}
+
+QLabel* Inventory::createNewItemAndMoveOnPoint(QPixmap pixmap, QPoint dropPoint, QPoint oldPoint)
+{
+    QLabel *newIcon = new QLabel(this);
+    newIcon->setPixmap(pixmap.scaled(100, 100));
+    newIcon->move(dropPoint - oldPoint);
+    newIcon->setAttribute(Qt::WA_DeleteOnClose);
+    return newIcon;
 }

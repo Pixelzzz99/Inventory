@@ -7,9 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui_Main->setupUi(this);
     configureMenuBar();
-    inventoryTable = new Inventory(ui_Main->Inventory);
-    itemSlot = new Item(ui_Main->Item, ":/new/Items/Apple");
-    setAcceptDrops(true);
+    inventoryTable = createNewInventory();
+    itemSlot = createItemSlot();
 }
 
 MainWindow::~MainWindow()
@@ -27,4 +26,13 @@ void MainWindow::configureMenuBar()
     connect(menuButton, &QPushButton::clicked, menuBar, &MenuBar::showMenu);
 }
 
+Inventory* MainWindow::createNewInventory()
+{
+    return new Inventory(ui_Main->Inventory);
+}
+
+Item* MainWindow::createItemSlot()
+{
+    return new Item(ui_Main->Item, ":/new/Items/Apple");
+}
 

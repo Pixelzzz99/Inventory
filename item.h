@@ -15,13 +15,14 @@ class Item : public QWidget
     QPixmap _pathToImage;
 
     QPoint dragStartPosition;
+
+    QDrag* collectInformationFromItemAndGetDragItem(QPixmap pixmap, QPoint mousePosition, QPoint oldPosition);
+    QPixmap createShadowPixmapItem(QPixmap pixmap);
+
 public:
     explicit Item(QWidget* parent = nullptr, QString path = nullptr);
     void setPixmapItem(QPixmap newPixmap);
 protected:
-    //void dragEnterEvent(QDragEnterEvent *event) override;
-    //void dragMoveEvent(QDragMoveEvent *event) override;
-    //void dropEvent(QDropEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
 };
 
